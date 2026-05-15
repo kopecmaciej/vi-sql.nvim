@@ -126,8 +126,10 @@ create_vi_sql_window = function(jump)
 
     if M.config.toggle_key then
         vim.keymap.set("t", M.config.toggle_key, function()
-            api.nvim_win_close(win, false)
-            M._win = nil
+            if M._win and api.nvim_win_is_valid(M._win) then
+                api.nvim_win_close(M._win, false)
+                M._win = nil
+            end
         end, { buffer = buf, desc = "Toggle vi-sql window" })
     end
 

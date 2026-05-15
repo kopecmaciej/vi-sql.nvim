@@ -1,11 +1,10 @@
-# Vi SQL nvim plugin
+# vi-sql.nvim
 
-**Vi SQL** is a TUI application for managing SQL databases.
-This repository contains a Neovim plugin that provides a floating window interface for Vi SQL.
+Neovim plugin for [vi-sql](https://github.com/kopecmaciej/vi-sql) — a TUI client for SQL databases (PostgreSQL, SQLite, MySQL). Opens vi-sql in a floating window and keeps the session running in the background when toggled.
 
 ## Installation
 
-### Using [lazy.nvim](https://github.com/folke/lazy.nvim)
+### [lazy.nvim](https://github.com/folke/lazy.nvim) (recommended)
 
 ```lua
 {
@@ -13,15 +12,15 @@ This repository contains a Neovim plugin that provides a floating window interfa
   config = function()
     require("vi-sql").setup()
   end,
-  cmd = { "ViSQL" },
+  cmd = { "ViSQL", "ViSQLJump" },
   keys = {
-    { "<leader>vs", "<cmd>ViSQL<cr>", desc = "ViSQL" },
-    { "<leader>vj", ":ViSQLJump ", desc = "ViSQL jump to table", silent = false },
-  }
+    { "<leader>vs", "<cmd>ViSQL<cr>", desc = "Toggle vi-sql" },
+    { "<leader>vj", ":ViSQLJump ", desc = "vi-sql jump to table", silent = false },
+  },
 }
 ```
 
-### Using [packer.nvim](https://github.com/wbthomason/packer.nvim)
+### [packer.nvim](https://github.com/wbthomason/packer.nvim)
 
 ```lua
 use {
@@ -32,51 +31,50 @@ use {
 }
 ```
 
-### Using [vim-plug](https://github.com/junegunn/vim-plug)
+### [vim-plug](https://github.com/junegunn/vim-plug)
 
 ```vim
 Plug 'kopecmaciej/vi-sql.nvim'
 ```
 
-Then run `:PlugInstall` in Neovim.
-
 ## Usage
 
-Toggle the Vi SQL window (open if closed, hide if open — the session keeps running in the background):
+| Command | Description |
+|---|---|
+| `:ViSQL` | Toggle the floating window (session keeps running when hidden) |
+| `:ViSQLJump public/users` | Open and jump directly to a schema/table |
 
-```
-:ViSQL
-```
-
-Open and jump directly to a schema/table:
-
-```
-:ViSQLJump public/users
-```
+Inside the vi-sql window, press `<C-\><C-\>` to hide it without ending the session.
 
 ## Configuration
 
+All options with their defaults:
+
 ```lua
 require("vi-sql").setup({
-    -- Auto-connect to a named connection on open (default: nil)
+    -- Auto-connect to a named connection on open
     connection = nil,
 
-    -- Floating window size as a fraction of the editor (default: 0.9)
+    -- Key to hide the window from inside vi-sql (terminal mode)
+    toggle_key = "<C-\\><C-\\>",
+
+    -- Floating window size as fraction of the editor
     width = 0.9,
     height = 0.9,
 })
 ```
 
-### Example with a default connection
+### Example
 
 ```lua
 require("vi-sql").setup({
     connection = "my-postgres",
+    toggle_key = "<C-q>",
 })
 ```
 
 ## Requirements
 
-- Neovim 0.5 or later
-- `curl` (used for auto-install)
-- `vi-sql` CLI — if not found in PATH, the plugin will offer to install it automatically via the official install script
+- Neovim 0.5+
+- `curl` — used for auto-install if `vi-sql` is not in PATH
+- `vi-sql` — installed automatically on first use if missing
