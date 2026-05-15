@@ -12,6 +12,8 @@ local M = {
     },
 }
 
+local create_vi_sql_window -- forward declaration
+
 local function get_win_opts()
     local width = vim.o.columns
     local height = vim.o.lines
@@ -41,15 +43,46 @@ local function build_cmd()
     return cmd
 end
 
-local function create_vi_sql_window()
+local function install_vi_sql()
+    local choice = fn.confirm("vi-sql not found. Install it now?", "&Yes\n&No", 2)
+    if choice ~= 1 then
+        return
+    end
+
+    local buf = api.nvim_create_buf(false, true)
+    local win = api.nvim_open_win(buf, true, get_win_opts())
+    api.nvim_set_option_value("winblend", 0, { win = win })
+
+    api.nvim_create_autocmd("TermClose", {
+        buffer = buf,
+        callback = function()
+            vim.schedule(function()
+                if api.nvim_win_is_valid(win) then
+                    api.nvim_win_close(win, true)
+                end
+                if fn.executable("vi-sql") == 1 then
+                    create_vi_sql_window()
+                else
+                    api.nvim_err_writeln("vi-sql installation failed. Check output above.")
+                end
+            end)
+        end,
+        once = true,
+    })
+
+    local install_cmd = "curl -fsSL https://raw.githubusercontent.com/kopecmaciej/vi-sql/master/scripts/install.sh | sh"
+    fn.jobstart({ "sh", "-c", install_cmd }, { term = true })
+    vim.cmd("startinsert")
+end
+
+create_vi_sql_window = function()
     if fn.executable("vi-sql") ~= 1 then
-        api.nvim_err_writeln("Failed to start vi-sql. Is it installed and in your PATH?")
+        install_vi_sql()
         return
     end
 
     if M.config.persist and M._buf and api.nvim_buf_is_valid(M._buf) then
-        local opts = get_win_opts()
-        M._win = api.nvim_open_win(M._buf, true, opts)
+        M._win = api.nvim_open_win(M._buf, true, get_win_opts())
         api.nvim_set_option_value("winblend", 0, { win = M._win })
         vim.cmd("startinsert")
         return
@@ -57,9 +90,8 @@ local function create_vi_sql_window()
 
     local buf = api.nvim_create_buf(false, true)
     M._buf = buf
-    local opts = get_win_opts()
 
-    local win = api.nvim_open_win(buf, true, opts)
+    local win = api.nvim_open_win(buf, true, get_win_opts())
     M._win = win
 
     api.nvim_set_option_value("winblend", 0, { win = win })
@@ -78,7 +110,6 @@ local function create_vi_sql_window()
     })
 
     fn.jobstart(build_cmd(), { term = true })
-
     vim.cmd("startinsert")
 end
 

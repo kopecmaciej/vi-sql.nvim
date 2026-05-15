@@ -75,4 +75,5 @@ require("vi-sql").setup({
 ## Requirements
 
 - Neovim 0.5 or later
-- `vi-sql` CLI tool installed and available in your PATH
+- `curl` (used for auto-install)
+- `vi-sql` CLI — if not found in PATH, the plugin will offer to install it automatically via the official install script
