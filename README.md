@@ -17,7 +17,7 @@ Neovim plugin for [vi-sql](https://github.com/kopecmaciej/vi-sql) — a TUI clie
   end,
   cmd = { "ViSQL", "ViSQLJump" },
   keys = {
-    { "<leader>vs", "<cmd>ViSQL<cr>", desc = "Toggle vi-sql" },
+    { "<leader>vs", "<cmd>ViSQL<cr>", desc = "Open vi-sql" },
     { "<leader>vj", ":ViSQLJump ", desc = "vi-sql jump to table", silent = false },
   },
 }
@@ -44,7 +44,7 @@ Plug 'kopecmaciej/vi-sql.nvim'
 
 | Command                   | Description                                                    |
 | ------------------------- | -------------------------------------------------------------- |
-| `:ViSQL`                  | Toggle the floating window (session keeps running when hidden) |
+| `:ViSQL`                  | Open vi-sql (or reopen if session is running in background)    |
 | `:ViSQLJump public/users` | Open and jump directly to a schema/table                       |
 
 Inside the vi-sql window, press `<C-q>` to hide it without ending the session.
