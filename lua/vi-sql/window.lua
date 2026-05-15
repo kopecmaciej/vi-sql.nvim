@@ -8,7 +8,7 @@ local M = {
         connection = nil,
         width = 0.9,
         height = 0.9,
-        toggle_key = "<C-\\><C-\\>",
+        hide_key = "<C-q>",
     },
 }
 
@@ -124,13 +124,13 @@ create_vi_sql_window = function(jump)
         once = true,
     })
 
-    if M.config.toggle_key then
-        vim.keymap.set("t", M.config.toggle_key, function()
+    if M.config.hide_key then
+        vim.keymap.set("t", M.config.hide_key, function()
             if M._win and api.nvim_win_is_valid(M._win) then
                 api.nvim_win_close(M._win, false)
                 M._win = nil
             end
-        end, { buffer = buf, desc = "Toggle vi-sql window" })
+        end, { buffer = buf, desc = "Hide vi-sql window" })
     end
 
     fn.jobstart(build_cmd(jump), { term = true })

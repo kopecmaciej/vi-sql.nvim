@@ -10,7 +10,10 @@ Neovim plugin for [vi-sql](https://github.com/kopecmaciej/vi-sql) — a TUI clie
 {
   "kopecmaciej/vi-sql.nvim",
   config = function()
-    require("vi-sql").setup()
+    require("vi-sql").setup({
+      -- Press this inside vi-sql to hide the window without ending the session (change to taste)
+      hide_key = "<C-q>",
+    })
   end,
   cmd = { "ViSQL", "ViSQLJump" },
   keys = {
@@ -39,12 +42,12 @@ Plug 'kopecmaciej/vi-sql.nvim'
 
 ## Usage
 
-| Command | Description |
-|---|---|
-| `:ViSQL` | Toggle the floating window (session keeps running when hidden) |
-| `:ViSQLJump public/users` | Open and jump directly to a schema/table |
+| Command                   | Description                                                    |
+| ------------------------- | -------------------------------------------------------------- |
+| `:ViSQL`                  | Toggle the floating window (session keeps running when hidden) |
+| `:ViSQLJump public/users` | Open and jump directly to a schema/table                       |
 
-Inside the vi-sql window, press `<C-\><C-\>` to hide it without ending the session.
+Inside the vi-sql window, press `<C-q>` to hide it without ending the session.
 
 ## Configuration
 
@@ -55,8 +58,8 @@ require("vi-sql").setup({
     -- Auto-connect to a named connection on open
     connection = nil,
 
-    -- Key to hide the window from inside vi-sql (terminal mode)
-    toggle_key = "<C-\\><C-\\>",
+    -- Key to hide the window from inside vi-sql without ending the session (terminal mode)
+    hide_key = "<C-q>",
 
     -- Floating window size as fraction of the editor
     width = 0.9,
@@ -69,7 +72,7 @@ require("vi-sql").setup({
 ```lua
 require("vi-sql").setup({
     connection = "my-postgres",
-    toggle_key = "<C-q>",
+    hide_key = "<F5>",
 })
 ```
 
