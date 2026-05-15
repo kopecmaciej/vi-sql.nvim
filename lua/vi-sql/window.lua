@@ -5,7 +5,6 @@ local M = {
     _buf = nil,
     _win = nil,
     config = {
-        persist = false,
         connection = nil,
         width = 0.9,
         height = 0.9,
@@ -64,7 +63,7 @@ local function install_vi_sql()
                     api.nvim_win_close(win, true)
                 end
                 if fn.executable("vi-sql") == 1 then
-                    create_vi_sql_window()
+                    create_vi_sql_window(nil)
                 else
                     api.nvim_err_writeln("vi-sql installation failed. Check output above.")
                 end
@@ -84,13 +83,22 @@ create_vi_sql_window = function(jump)
         return
     end
 
-    if M.config.persist and M._buf and api.nvim_buf_is_valid(M._buf) then
+    -- Toggle: hide window if already visible
+    if M._win and api.nvim_win_is_valid(M._win) then
+        api.nvim_win_close(M._win, false)
+        M._win = nil
+        return
+    end
+
+    -- Reattach to existing buffer (vi-sql process still running)
+    if M._buf and api.nvim_buf_is_valid(M._buf) then
         M._win = api.nvim_open_win(M._buf, true, get_win_opts())
         api.nvim_set_option_value("winblend", 0, { win = M._win })
         vim.cmd("startinsert")
         return
     end
 
+    -- Fresh start
     local buf = api.nvim_create_buf(false, true)
     M._buf = buf
 
@@ -98,7 +106,8 @@ create_vi_sql_window = function(jump)
     M._win = win
 
     api.nvim_set_option_value("winblend", 0, { win = win })
-    vim.bo[buf].bufhidden = M.config.persist and "hide" or "wipe"
+    -- always hide so toggling doesn't kill the running process
+    vim.bo[buf].bufhidden = "hide"
 
     api.nvim_create_autocmd("TermClose", {
         buffer = buf,
@@ -107,6 +116,8 @@ create_vi_sql_window = function(jump)
                 if api.nvim_win_is_valid(win) then
                     api.nvim_win_close(win, true)
                 end
+                M._win = nil
+                M._buf = nil
             end)
         end,
         once = true,

@@ -1,6 +1,6 @@
 # Vi SQL nvim plugin
 
-**Vi SQL** is a TUI application for managing SQL databases (PostgreSQL, SQLite, MySQL).
+**Vi SQL** is a TUI application for managing SQL databases.
 This repository contains a Neovim plugin that provides a floating window interface for Vi SQL.
 
 ## Installation
@@ -42,7 +42,7 @@ Then run `:PlugInstall` in Neovim.
 
 ## Usage
 
-Open the Vi SQL window:
+Toggle the Vi SQL window (open if closed, hide if open — the session keeps running in the background):
 
 ```
 :ViSQL
@@ -58,9 +58,6 @@ Open and jump directly to a schema/table:
 
 ```lua
 require("vi-sql").setup({
-    -- Keep the buffer alive when the window is closed (default: false)
-    persist = false,
-
     -- Auto-connect to a named connection on open (default: nil)
     connection = nil,
 
@@ -74,7 +71,6 @@ require("vi-sql").setup({
 
 ```lua
 require("vi-sql").setup({
-    persist = true,
     connection = "my-postgres",
 })
 ```
