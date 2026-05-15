@@ -1,6 +1,7 @@
 # vi-sql.nvim
 
-Neovim plugin for [vi-sql](https://github.com/kopecmaciej/vi-sql) — a TUI client for SQL databases. Opens vi-sql in a floating window and keeps the session alive in the background between visits.
+Neovim plugin for [vi-sql](https://github.com/kopecmaciej/vi-sql) — a TUI client for SQL databases.
+Opens vi-sql in a floating window and keeps the session alive in the background between visits.
 
 ## How it works
 
@@ -11,7 +12,7 @@ Neovim plugin for [vi-sql](https://github.com/kopecmaciej/vi-sql) — a TUI clie
 
 ## Installation
 
-### [lazy.nvim](https://github.com/folke/lazy.nvim) (recommended)
+### [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ```lua
 {
@@ -25,7 +26,7 @@ Neovim plugin for [vi-sql](https://github.com/kopecmaciej/vi-sql) — a TUI clie
   cmd = { "ViSQL", "ViSQLJump" },
   keys = {
     { "<leader>vs", "<cmd>ViSQL<cr>", desc = "Open vi-sql" },
-    { "<leader>vj", ":ViSQLJump ", desc = "vi-sql: jump to table", silent = false },
+    -- { "<leader>vj", ":ViSQLJump ", desc = "vi-sql: jump to table", silent = false },
   },
 }
 ```
