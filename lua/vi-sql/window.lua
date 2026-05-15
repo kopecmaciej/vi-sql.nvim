@@ -8,7 +8,7 @@ local M = {
         connection = nil,
         width = 0.9,
         height = 0.9,
-        hide_key = "<C-q>",
+        hide_key = nil,
     },
 }
 
