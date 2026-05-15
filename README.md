@@ -15,7 +15,8 @@ This repository contains a Neovim plugin that provides a floating window interfa
   end,
   cmd = { "ViSQL" },
   keys = {
-    { "<leader>vs", "<cmd>ViSQL<cr>", desc = "ViSQL" }
+    { "<leader>vs", "<cmd>ViSQL<cr>", desc = "ViSQL" },
+    { "<leader>vj", ":ViSQLJump ", desc = "ViSQL jump to table", silent = false },
   }
 }
 ```
@@ -41,10 +42,16 @@ Then run `:PlugInstall` in Neovim.
 
 ## Usage
 
-Open the Vi SQL window with:
+Open the Vi SQL window:
 
 ```
 :ViSQL
+```
+
+Open and jump directly to a schema/table:
+
+```
+:ViSQLJump public/users
 ```
 
 ## Configuration

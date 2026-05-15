@@ -35,10 +35,13 @@ local function get_win_opts()
     }
 end
 
-local function build_cmd()
+local function build_cmd(jump)
     local cmd = "vi-sql"
     if M.config.connection then
         cmd = cmd .. " --connection-name " .. fn.shellescape(M.config.connection)
+    end
+    if jump and jump ~= "" then
+        cmd = cmd .. " --jump " .. fn.shellescape(jump)
     end
     return cmd
 end
@@ -75,7 +78,7 @@ local function install_vi_sql()
     vim.cmd("startinsert")
 end
 
-create_vi_sql_window = function()
+create_vi_sql_window = function(jump)
     if fn.executable("vi-sql") ~= 1 then
         install_vi_sql()
         return
@@ -109,13 +112,18 @@ create_vi_sql_window = function()
         once = true,
     })
 
-    fn.jobstart(build_cmd(), { term = true })
+    fn.jobstart(build_cmd(jump), { term = true })
     vim.cmd("startinsert")
 end
 
 function M.setup(opts)
     M.config = vim.tbl_extend("force", M.config, opts or {})
-    api.nvim_create_user_command("ViSQL", create_vi_sql_window, { nargs = 0 })
+    api.nvim_create_user_command("ViSQL", function()
+        create_vi_sql_window(nil)
+    end, { nargs = 0 })
+    api.nvim_create_user_command("ViSQLJump", function(cmd_opts)
+        create_vi_sql_window(cmd_opts.args)
+    end, { nargs = 1, desc = "Open vi-sql and jump to schema/table (format: schema/table)" })
 end
 
 return M
